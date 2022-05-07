@@ -15,6 +15,46 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes = true
 build_property.MSBuildProjectDirectory = E:\My projects\IETP_LabWorks\Lab1-web-app\Lab1-web-app\Lab1-web-app
 build_property._RazorSourceGeneratorDebug = 
 
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/Accomodations/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/Accomodations/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/Accomodations/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/Accomodations/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/Accomodations/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/AccomodationTypes/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uVHlwZXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/AccomodationTypes/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uVHlwZXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/AccomodationTypes/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uVHlwZXNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/AccomodationTypes/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uVHlwZXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/AccomodationTypes/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb21vZGF0aW9uVHlwZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/My projects/IETP_LabWorks/Lab1-web-app/Lab1-web-app/Lab1-web-app/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
