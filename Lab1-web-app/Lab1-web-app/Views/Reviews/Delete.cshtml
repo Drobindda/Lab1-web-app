@@ -39,7 +39,8 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
+        <input type="hidden" name="AccomodationId" value="@ViewBag.AccomodationId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index" asp-route-id="@ViewBag.AccomodationId" asp-route-name="@ViewBag.AccomodationName">Повернутись</a>
     </form>
 </div>

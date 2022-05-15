@@ -79,6 +79,7 @@ namespace Lab1_web_app.Controllers
             {
                 return NotFound();
             }
+
             return View(accomodationType);
         }
 

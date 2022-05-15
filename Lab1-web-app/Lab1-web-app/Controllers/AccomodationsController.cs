@@ -74,6 +74,12 @@ namespace Lab1_web_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int typeId, [Bind("Id,UserId,CityId,TypeId,Name,Stars,Rating,Phone,CreatedAt,UpdatedAt,Address,StatusId,Description,Longtitude,Latitude")] Accomodation accomodation)
         {
+
+            accomodation.CreatedAt = DateTime.Now;
+            accomodation.UpdatedAt = DateTime.Now;
+            accomodation.StatusId = _context.AccomodationStatuses.Where(s => s.Name == "OK").FirstOrDefault().Id;
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(accomodation);
@@ -104,10 +110,14 @@ namespace Lab1_web_app.Controllers
             {
                 return NotFound();
             }
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id", accomodation.CityId);
-            ViewData["StatusId"] = new SelectList(_context.AccomodationStatuses, "Id", "Id", accomodation.StatusId);
-            ViewData["TypeId"] = new SelectList(_context.AccomodationTypes, "Id", "Name", accomodation.TypeId);
+
+            ViewBag.AccomodationId = accomodation.Id;
+            ViewBag.AccomodationName = accomodation.Name;
+
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", accomodation.UserId);
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", accomodation.CityId);
+            ViewData["TypeId"] = new SelectList(_context.AccomodationTypes, "Id", "Name", accomodation.TypeId);
+
             return View(accomodation);
         }
 
@@ -122,6 +132,16 @@ namespace Lab1_web_app.Controllers
             {
                 return NotFound();
             }
+
+            
+             var acc = await _context.Accomodations.AsNoTracking().Where(a => a.Id == id).Include(a => a.Type).FirstOrDefaultAsync();
+
+             accomodation.Rating = acc.Rating;
+             accomodation.CreatedAt = acc.CreatedAt;
+             accomodation.UpdatedAt = DateTime.Now;
+             accomodation.StatusId = acc.StatusId;
+            
+
 
             if (ModelState.IsValid)
             {
@@ -141,7 +161,7 @@ namespace Lab1_web_app.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Accomodations", new { id = acc.TypeId, name = acc.Type.Name});
             }
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id", accomodation.CityId);
             ViewData["StatusId"] = new SelectList(_context.AccomodationStatuses, "Id", "Id", accomodation.StatusId);

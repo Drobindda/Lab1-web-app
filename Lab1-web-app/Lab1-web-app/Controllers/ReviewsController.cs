@@ -68,10 +68,22 @@ namespace Lab1_web_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int accomodationId,[Bind("Id,UserId,AccomodationId,Rating,Comment")] Review review)
         {
-            var accomodation = _context.Accomodations.Where(a => a.Id == accomodationId).FirstOrDefault();
+            var accomodation = _context.Accomodations.Where(a => a.Id == accomodationId).Include(a => a.Reviews).FirstOrDefault();
 
             if (ModelState.IsValid)
             {
+                
+                if (accomodation.Rating == null)
+                {
+                    accomodation.Rating = (byte)review.Rating;
+                }
+                else
+                {
+                    var sum = accomodation.Reviews.Sum(r => r.Rating);
+                    sum += review.Rating;
+                    accomodation.Rating = (byte?)(sum / (accomodation.Reviews.Count + 1));
+                }
+
                 _context.Add(review);
                 await _context.SaveChangesAsync();
 
@@ -85,8 +97,10 @@ namespace Lab1_web_app.Controllers
         }
 
         // GET: Reviews/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int accomodationId)
         {
+            var accomodation = _context.Accomodations.Where(a => a.Id == accomodationId).Include(a => a.Reviews).FirstOrDefault();
+
             if (id == null || _context.Reviews == null)
             {
                 return NotFound();
@@ -99,6 +113,10 @@ namespace Lab1_web_app.Controllers
             }
             ViewData["AccomodationId"] = new SelectList(_context.Accomodations, "Id", "Id", review.AccomodationId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", review.UserId);
+
+            ViewBag.AccomodationId = accomodation.Id;
+            ViewBag.AccomodationName = accomodation.Name;
+
             return View(review);
         }
 
@@ -107,8 +125,10 @@ namespace Lab1_web_app.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,AccomodationId,Rating,Comment")] Review review)
+        public async Task<IActionResult> Edit(int id, int accomodationId, [Bind("Id,UserId,AccomodationId,Rating,Comment")] Review review)
         {
+            var accomodation = _context.Accomodations.AsNoTracking().Where(a => a.Id == accomodationId).Include(a => a.Reviews).FirstOrDefault();
+
             if (id != review.Id)
             {
                 return NotFound();
@@ -116,6 +136,20 @@ namespace Lab1_web_app.Controllers
 
             if (ModelState.IsValid)
             {
+                if (accomodation.Rating == null)
+                {
+                    accomodation.Rating = (byte)review.Rating;
+                }
+                else
+                {
+                    var sum = accomodation.Reviews.Where(r => r.Id != id).Sum(r => r.Rating);
+                    sum += review.Rating;
+                    accomodation.Rating = (byte?)(sum / (accomodation.Reviews.Count));
+                }
+
+                _context.Accomodations.Where(a => a.Id == accomodation.Id).ToList().FirstOrDefault().Rating = accomodation.Rating;   
+
+
                 try
                 {
                     _context.Update(review);
@@ -132,7 +166,7 @@ namespace Lab1_web_app.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Reviews", new { id = accomodation.Id, name = accomodation.Name });
             }
             ViewData["AccomodationId"] = new SelectList(_context.Accomodations, "Id", "Id", review.AccomodationId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", review.UserId);
@@ -140,8 +174,11 @@ namespace Lab1_web_app.Controllers
         }
 
         // GET: Reviews/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int accomodationId)
         {
+
+            var accomodation = _context.Accomodations.Where(a => a.Id == accomodationId).Include(a => a.Reviews).FirstOrDefault();
+
             if (id == null || _context.Reviews == null)
             {
                 return NotFound();
@@ -156,26 +193,43 @@ namespace Lab1_web_app.Controllers
                 return NotFound();
             }
 
+            ViewBag.AccomodationId = accomodation.Id;
+            ViewBag.AccomodationName = accomodation.Name;
+
             return View(review);
         }
 
         // POST: Reviews/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, int accomodationId)
         {
+
+            var accomodation = _context.Accomodations.Where(a => a.Id == accomodationId).Include(a => a.Reviews).FirstOrDefault();
+
             if (_context.Reviews == null)
             {
                 return Problem("Entity set 'DBBookingContext.Reviews'  is null.");
             }
             var review = await _context.Reviews.FindAsync(id);
             if (review != null)
-            {
+            {   
+                if (accomodation.Reviews.Count == 1)
+                    accomodation.Rating = null;
+                else
+                {
+                    var sum = accomodation.Reviews.Sum(r => r.Rating);
+                    sum -= review.Rating;
+                    accomodation.Rating = (byte?)(sum / (accomodation.Reviews.Count - 1));
+                }
+
+
                 _context.Reviews.Remove(review);
+                
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Reviews", new { id = accomodation.Id, name = accomodation.Name });
         }
 
         private bool ReviewExists(int id)
