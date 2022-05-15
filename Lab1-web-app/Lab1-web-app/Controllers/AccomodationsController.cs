@@ -20,7 +20,7 @@ namespace Lab1_web_app.Controllers
         }
 
         // GET: Accomodations
-        public async Task<IActionResult> Index(int? id, string? name)
+        public async Task<IActionResult> Index(int? id, string name)
         {
             if(id == null) return RedirectToAction("Index", "AccomodationTypes");
 
