@@ -21,7 +21,7 @@ namespace Lab1_web_app.Controllers
         // GET: Bookings
         public async Task<IActionResult> Index()
         {
-            var dBBookingContext = _context.Bookings.Include(b => b.Room).Include(b => b.Status).Include(b => b.User);
+            var dBBookingContext = _context.Bookings.Include(b => b.Room).ThenInclude(r => r.Accomodation).Include(b => b.Status).Include(b => b.User);
             return View(await dBBookingContext.ToListAsync());
         }
 
@@ -49,14 +49,15 @@ namespace Lab1_web_app.Controllers
         // GET: Bookings/Create
         public IActionResult Create(int roomId)
         {
-            //ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id");
-            ViewData["StatusId"] = new SelectList(_context.BookingStatuses, "Id", "Id");
+
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
             
             var room = _context.Rooms.Where(r => r.Id == roomId).Include(r => r.Accomodation).FirstOrDefault();
 
+            ViewBag.RoomPrice = room.Price;
             ViewBag.RoomId = room.Id;
             ViewBag.RoomName = room.Name;
+            ViewBag.AccomodationId = room.Accomodation.Id;
             ViewBag.AccomodationName = room.Accomodation.Name;
 
             return View();
@@ -70,6 +71,12 @@ namespace Lab1_web_app.Controllers
         public async Task<IActionResult> Create(int roomId, [Bind("Id,UserId,RoomId,StatusId,StartDate,EndDate,GuestQuantity,Price,CreatedAt,UpdatedAt")] Booking booking)
         {
             var accomodation = _context.Rooms.Where(r => r.Id == roomId).Include(r => r.Accomodation).FirstOrDefault().Accomodation;
+
+            booking.CreatedAt = DateTime.Now;
+            booking.UpdatedAt = DateTime.Now;
+            int duration = (int)(booking.EndDate - booking.StartDate).TotalDays;
+            booking.StatusId = _context.BookingStatuses.Where(bs => bs.Name == "OK").First().Id;
+            booking.Price = (decimal)(duration * _context.Rooms.Where(r => r.Id == booking.RoomId).First().Price);
 
             if (ModelState.IsValid)
             {
@@ -98,9 +105,7 @@ namespace Lab1_web_app.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id", booking.RoomId);
-            ViewData["StatusId"] = new SelectList(_context.BookingStatuses, "Id", "Id", booking.StatusId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", booking.UserId);
+
             return View(booking);
         }
 
@@ -111,6 +116,17 @@ namespace Lab1_web_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,RoomId,StatusId,StartDate,EndDate,GuestQuantity,Price,CreatedAt,UpdatedAt")] Booking booking)
         {
+            var bookingOld = _context.Bookings.AsNoTracking().Include(b => b.Room).Where(b => b.Id == id).First();
+
+            booking.RoomId = bookingOld.RoomId;
+            booking.StatusId = bookingOld.StatusId;
+            booking.UserId = bookingOld.UserId;
+            booking.CreatedAt = bookingOld.CreatedAt;
+            booking.UpdatedAt = DateTime.Now;
+
+            int duration = (int)(booking.EndDate - booking.StartDate).TotalDays;
+            booking.Price = (decimal)(duration * bookingOld.Room.Price);
+
             if (id != booking.Id)
             {
                 return NotFound();

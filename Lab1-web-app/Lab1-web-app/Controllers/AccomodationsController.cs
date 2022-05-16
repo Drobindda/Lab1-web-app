@@ -25,7 +25,7 @@ namespace Lab1_web_app.Controllers
             if(id == null) return RedirectToAction("Index", "AccomodationTypes");
 
             ViewBag.AccomodationTypeId = id;
-            ViewBag.AccomodationTypeName = name;    
+            ViewBag.AccomodationTypeName = _context.AccomodationTypes.Where(at => at.Id == id).FirstOrDefault().Name;    
             var dBBookingContext = _context.Accomodations.Where(a => a.TypeId == id).Include(a => a.City).Include(a => a.Status).Include(a => a.Type).Include(a => a.User);
 
             return View(await dBBookingContext.ToListAsync());
@@ -57,7 +57,7 @@ namespace Lab1_web_app.Controllers
         public IActionResult Create(int typeId)
         {
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id");
-            ViewData["StatusId"] = new SelectList(_context.AccomodationStatuses, "Id", "Id");
+            //ViewData["StatusId"] = new SelectList(_context.AccomodationStatuses, "Id", "Id");
             //ViewData["TypeId"] = new SelectList(_context.AccomodationTypes, "Id", "Name");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
 

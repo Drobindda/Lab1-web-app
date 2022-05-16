@@ -19,14 +19,14 @@ namespace Lab1_web_app.Controllers
         }
 
         // GET: Rooms
-        public async Task<IActionResult> Index(int? id, string name)
+        public async Task<IActionResult> Index(int? id)
         {
             if (id == null) return RedirectToAction("Index", "Accomodations", new {id = _context.Accomodations.Where(e => e.Id == id).FirstOrDefault().TypeId});
 
             ViewBag.AccomodationId = id;
-            ViewBag.AccomodationName = name;
+            ViewBag.AccomodationName = _context.Accomodations.Where(a => a.Id == id).First().Name;
 
-            var dBBookingContext = _context.Rooms.Where(r => r.Id == id).Include(r => r.Accomodation).Include(r => r.MealService).Include(r => r.Status);
+            var dBBookingContext = _context.Rooms.Where(r => r.AccomodationId == id).Include(r => r.Accomodation).Include(r => r.MealService).Include(r => r.Status);
 
             return View(await dBBookingContext.ToListAsync());
         }
@@ -55,9 +55,8 @@ namespace Lab1_web_app.Controllers
         // GET: Rooms/Create
         public IActionResult Create(int accomodationId)
         {
-            //ViewData["AccomodationId"] = new SelectList(_context.Accomodations, "Id", "Id");
-            ViewData["MealServiceId"] = new SelectList(_context.MealServices, "Id", "Id");
-            ViewData["StatusId"] = new SelectList(_context.RoomStatuses, "Id", "Id");
+
+            ViewData["MealServiceId"] = new SelectList(_context.MealServices, "Id", "Name");
 
             ViewBag.AccomodationId = accomodationId;
             ViewBag.AccomodationName = _context.Accomodations.Where(a => a.Id == accomodationId).FirstOrDefault().Name;
@@ -72,18 +71,19 @@ namespace Lab1_web_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int accomodationId, [Bind("Id,AccomodationId,Name,SdandartOccupancy,MaxOccupancy,TotalBedrooms,TotalBathrooms,HasTv,HasKitchen,HasAirCon,HasInternet,MealServiceId,Description,Size,Price,Quantity,StatusId")] Room room)
         {
+
+            room.Status = _context.RoomStatuses.Where(r => r.Name == "OK").First();
+
             if (ModelState.IsValid)
             {
                 _context.Add(room);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Rooms", new { id = accomodationId, name = _context.Accomodations.Where(a => a.Id == accomodationId).FirstOrDefault().Name });
+                return RedirectToAction("Index", "Rooms", new { id = accomodationId});
             }
-            //ViewData["AccomodationId"] = new SelectList(_context.Accomodations, "Id", "Id", room.AccomodationId);
+;
             ViewData["MealServiceId"] = new SelectList(_context.MealServices, "Id", "Id", room.MealServiceId);
-            ViewData["StatusId"] = new SelectList(_context.RoomStatuses, "Id", "Id", room.StatusId);
-            //return View(room);
 
-            return RedirectToAction("Index", "Rooms", new { id = accomodationId, name = _context.Accomodations.Where(a => a.Id == accomodationId).FirstOrDefault().Name });
+            return RedirectToAction("Index", "Rooms", new { id = accomodationId});
         }
 
         // GET: Rooms/Edit/5
@@ -99,9 +99,11 @@ namespace Lab1_web_app.Controllers
             {
                 return NotFound();
             }
-            ViewData["AccomodationId"] = new SelectList(_context.Accomodations, "Id", "Id", room.AccomodationId);
-            ViewData["MealServiceId"] = new SelectList(_context.MealServices, "Id", "Id", room.MealServiceId);
-            ViewData["StatusId"] = new SelectList(_context.RoomStatuses, "Id", "Id", room.StatusId);
+
+            ViewBag.AccomodationId = room.AccomodationId;
+
+            ViewData["MealServiceId"] = new SelectList(_context.MealServices, "Id", "Name", room.MealServiceId);
+
             return View(room);
         }
 
@@ -135,11 +137,11 @@ namespace Lab1_web_app.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Rooms", new { id = room.AccomodationId });
             }
-            ViewData["AccomodationId"] = new SelectList(_context.Accomodations, "Id", "Id", room.AccomodationId);
+
             ViewData["MealServiceId"] = new SelectList(_context.MealServices, "Id", "Id", room.MealServiceId);
-            ViewData["StatusId"] = new SelectList(_context.RoomStatuses, "Id", "Id", room.StatusId);
+
             return View(room);
         }
 
@@ -161,6 +163,8 @@ namespace Lab1_web_app.Controllers
                 return NotFound();
             }
 
+            ViewBag.AccomodationId = room.AccomodationId;
+
             return View(room);
         }
 
@@ -180,7 +184,7 @@ namespace Lab1_web_app.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Rooms", new { id = room.AccomodationId});
         }
 
         private bool RoomExists(int id)

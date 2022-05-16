@@ -94,7 +94,7 @@ namespace Lab1_web_app
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Bookings)
                     .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Bookings_Rooms");
 
                 entity.HasOne(d => d.Status)
@@ -201,7 +201,7 @@ namespace Lab1_web_app
                 entity.HasOne(d => d.Accomodation)
                     .WithMany(p => p.Rooms)
                     .HasForeignKey(d => d.AccomodationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Rooms_Accomodations");
 
                 entity.HasOne(d => d.MealService)

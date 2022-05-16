@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Lab1_web_app
 {
@@ -12,6 +13,7 @@ namespace Lab1_web_app
 
         public int Id { get; set; }
         public int AccomodationId { get; set; }
+        [Required]
         public string Name { get; set; } = null!;
         public int SdandartOccupancy { get; set; }
         public int MaxOccupancy { get; set; }
