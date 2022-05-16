@@ -23,8 +23,12 @@ namespace Lab1_web_app.Controllers
         {
             var dBBookingContext = _context.Reviews.Include(r => r.Accomodation).Include(r => r.User).Where(r => r.AccomodationId == id);
 
+            var accomodation = _context.Accomodations.Where(a => a.Id == id).Include(a => a.Type).First();
+
             ViewBag.AccomodationId = id;
             ViewBag.AccomodationName = name;
+            ViewBag.AccomodationTypeId = accomodation.TypeId;
+            ViewBag.AccomodationTypeName = accomodation.Type.Name;
 
             return View(await dBBookingContext.ToListAsync());
         }

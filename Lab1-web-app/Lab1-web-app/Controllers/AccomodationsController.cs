@@ -56,9 +56,7 @@ namespace Lab1_web_app.Controllers
         // GET: Accomodations/Create
         public IActionResult Create(int typeId)
         {
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id");
-            //ViewData["StatusId"] = new SelectList(_context.AccomodationStatuses, "Id", "Id");
-            //ViewData["TypeId"] = new SelectList(_context.AccomodationTypes, "Id", "Name");
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
 
             ViewBag.AccomodationTypeId = typeId;
@@ -89,7 +87,6 @@ namespace Lab1_web_app.Controllers
             }
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Id", accomodation.CityId);
             ViewData["StatusId"] = new SelectList(_context.AccomodationStatuses, "Id", "Id", accomodation.StatusId);
-            //ViewData["TypeId"] = new SelectList(_context.AccomodationTypes, "Id", "Name", accomodation.TypeId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", accomodation.UserId);
 
             return RedirectToAction("Index", "Accomodations", new { id = typeId, name = _context.AccomodationTypes.Where(a => a.Id == typeId).FirstOrDefault().Name });
