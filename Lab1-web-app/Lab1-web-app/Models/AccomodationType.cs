@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Lab1_web_app
 {
+    [Display(Name = "Тип житла")]
     public partial class AccomodationType
     {
         public AccomodationType()
