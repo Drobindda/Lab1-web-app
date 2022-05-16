@@ -110,6 +110,7 @@ namespace Lab1_web_app.Controllers
 
             ViewBag.AccomodationId = accomodation.Id;
             ViewBag.AccomodationName = accomodation.Name;
+            ViewBag.AccomodationTypeId = accomodation.TypeId;
 
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", accomodation.UserId);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", accomodation.CityId);

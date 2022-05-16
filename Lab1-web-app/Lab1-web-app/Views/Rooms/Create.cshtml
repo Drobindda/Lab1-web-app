@@ -6,7 +6,6 @@
 
 <h1>Додавання номера до житла : @ViewBag.AccomodationName</h1>
 
-<h4>Room</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -85,14 +84,14 @@
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Додати" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index" asp-route-id="@ViewBag.AccomodationId">Повернутись</a>
+    <a asp-action="Index" asp-route-id="@ViewBag.AccomodationId">Повернутися</a>
 </div>
 
 @section Scripts {

@@ -23,8 +23,11 @@ namespace Lab1_web_app.Controllers
         {
             if (id == null) return RedirectToAction("Index", "Accomodations", new {id = _context.Accomodations.Where(e => e.Id == id).FirstOrDefault().TypeId});
 
+            var accomodation = _context.Accomodations.Where(a => a.Id == id).First();
+
             ViewBag.AccomodationId = id;
-            ViewBag.AccomodationName = _context.Accomodations.Where(a => a.Id == id).First().Name;
+            ViewBag.AccomodationName = accomodation.Name;
+            ViewBag.AccomodationTypeId = accomodation.TypeId;
 
             var dBBookingContext = _context.Rooms.Where(r => r.AccomodationId == id).Include(r => r.Accomodation).Include(r => r.MealService).Include(r => r.Status);
 

@@ -103,11 +103,12 @@
                 @Html.DisplayFor(modelItem => item.MealService.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                <a asp-controller="Bookings" asp-action="Create" asp-route-roomId="@item.Id">Book</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Змінити</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a> |
+                <a asp-controller="Bookings" asp-action="Create" asp-route-roomId="@item.Id">Забронювати</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+<a asp-controller="Accomodations" asp-action="Index" asp-route-id="@ViewBag.AccomodationTypeId">Повернутися</a>
