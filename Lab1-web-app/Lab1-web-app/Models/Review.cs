@@ -12,6 +12,7 @@ namespace Lab1_web_app
         public int UserId { get; set; }
         public int AccomodationId { get; set; }
         [Display(Name = "Рейтинг")]
+        [Range(0, 100)]
         public int Rating { get; set; }
         [Display(Name = "Коментар")]
         public string Comment { get; set; } = null!;

@@ -97,7 +97,10 @@ namespace Lab1_web_app.Controllers
             //ViewData["AccomodationId"] = new SelectList(_context.Accomodations, "Id", "Id", review.AccomodationId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", review.UserId);
 
-            return RedirectToAction("Index", "Reviews", new { id = accomodation.Id, name = accomodation.Name });
+            ViewBag.AccomodationId = accomodation.Id;
+            ViewBag.AccomodatioName = accomodation.Name;
+
+            return View(accomodation);
         }
 
         // GET: Reviews/Edit/5

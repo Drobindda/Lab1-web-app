@@ -71,12 +71,23 @@ namespace Lab1_web_app.Controllers
         public async Task<IActionResult> Create(int roomId, [Bind("Id,UserId,RoomId,StatusId,StartDate,EndDate,GuestQuantity,Price,CreatedAt,UpdatedAt")] Booking booking)
         {
             var accomodation = _context.Rooms.Where(r => r.Id == roomId).Include(r => r.Accomodation).FirstOrDefault().Accomodation;
+            var room = _context.Rooms.Where(r => r.Id == roomId).Include(r => r.Accomodation).FirstOrDefault();
 
             booking.CreatedAt = DateTime.Now;
-            booking.UpdatedAt = DateTime.Now;
+            booking.UpdatedAt = booking.CreatedAt;
             int duration = (int)(booking.EndDate - booking.StartDate).TotalDays;
             booking.StatusId = _context.BookingStatuses.Where(bs => bs.Name == "OK").First().Id;
             booking.Price = (decimal)(duration * _context.Rooms.Where(r => r.Id == booking.RoomId).First().Price);
+
+            if(booking.GuestQuantity > room.MaxOccupancy)
+            {
+                ModelState.AddModelError("GuestQuantity", $"Кількість гостей перевищує максимально допустиму: {room.MaxOccupancy}");
+            }
+
+            if((booking.EndDate - booking.StartDate).Days < 1)
+            {
+                ModelState.AddModelError("EndDate", "Кількість днів проживання не може бути менше одного");
+            }
 
             if (ModelState.IsValid)
             {
@@ -86,10 +97,16 @@ namespace Lab1_web_app.Controllers
                 return RedirectToAction("Index", "Rooms", new { id = accomodation.Id, name = accomodation.Name });
             }
             //ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id", booking.RoomId);
-            ViewData["StatusId"] = new SelectList(_context.BookingStatuses, "Id", "Id", booking.StatusId);
+            //ViewData["StatusId"] = new SelectList(_context.BookingStatuses, "Id", "Id", booking.StatusId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", booking.UserId);
 
-            return RedirectToAction("Index", "Rooms", new { id = accomodation.Id, name = accomodation.Name });
+            ViewBag.RoomPrice = room.Price;
+            ViewBag.RoomId = room.Id;
+            ViewBag.RoomName = room.Name;
+            ViewBag.AccomodationId = room.Accomodation.Id;
+            ViewBag.AccomodationName = room.Accomodation.Name;
+
+            return View(booking);
         }
 
         // GET: Bookings/Edit/5
@@ -117,6 +134,8 @@ namespace Lab1_web_app.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,RoomId,StatusId,StartDate,EndDate,GuestQuantity,Price,CreatedAt,UpdatedAt")] Booking booking)
         {
             var bookingOld = _context.Bookings.AsNoTracking().Include(b => b.Room).Where(b => b.Id == id).First();
+            var room = _context.Rooms.Where(r => r.Id == bookingOld.RoomId).Include(r => r.Accomodation).FirstOrDefault();
+
 
             booking.RoomId = bookingOld.RoomId;
             booking.StatusId = bookingOld.StatusId;
@@ -127,10 +146,22 @@ namespace Lab1_web_app.Controllers
             int duration = (int)(booking.EndDate - booking.StartDate).TotalDays;
             booking.Price = (decimal)(duration * bookingOld.Room.Price);
 
+
             if (id != booking.Id)
             {
                 return NotFound();
             }
+
+            if (booking.GuestQuantity > room.MaxOccupancy)
+            {
+                ModelState.AddModelError("GuestQuantity", $"Кількість гостей перевищує максимально допустиму: {room.MaxOccupancy}");
+            }
+
+            if ((booking.EndDate - booking.StartDate).Days < 1)
+            {
+                ModelState.AddModelError("EndDate", "Кількість днів проживання не може бути менше одного");
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -152,9 +183,9 @@ namespace Lab1_web_app.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id", booking.RoomId);
-            ViewData["StatusId"] = new SelectList(_context.BookingStatuses, "Id", "Id", booking.StatusId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", booking.UserId);
+            //ViewData["RoomId"] = new SelectList(_context.Rooms, "Id", "Id", booking.RoomId);
+            //ViewData["StatusId"] = new SelectList(_context.BookingStatuses, "Id", "Id", booking.StatusId);
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", booking.UserId);
             return View(booking);
         }
 

@@ -21,10 +21,13 @@ namespace Lab1_web_app
         [Display(Name = "Статус")]
         public int StatusId { get; set; }
         [Display(Name = "Дата заїзду")]
+        [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
         [Display(Name = "Дата виїзду")]
+        [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
         [Display(Name = "Кількість гостей")]
+        [Range(1, Int32.MaxValue)]
         public int GuestQuantity { get; set; }
         [Display(Name = "Загальна ціна")]
         public decimal Price { get; set; }

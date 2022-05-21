@@ -77,6 +77,11 @@ namespace Lab1_web_app.Controllers
 
             room.Status = _context.RoomStatuses.Where(r => r.Name == "OK").First();
 
+            if(room.SdandartOccupancy > room.MaxOccupancy)
+            {
+                ModelState.AddModelError("MaxOccupancy", "Максимальна кількість гостів не може бути меншою за стандартну");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(room);
@@ -86,7 +91,10 @@ namespace Lab1_web_app.Controllers
 ;
             ViewData["MealServiceId"] = new SelectList(_context.MealServices, "Id", "Id", room.MealServiceId);
 
-            return RedirectToAction("Index", "Rooms", new { id = accomodationId});
+            ViewBag.AccomodationId = accomodationId;
+            ViewBag.AccomodationName = _context.Accomodations.Where(a => a.Id == accomodationId).FirstOrDefault().Name;
+
+            return View(room);
         }
 
         // GET: Rooms/Edit/5
@@ -122,6 +130,11 @@ namespace Lab1_web_app.Controllers
                 return NotFound();
             }
 
+            if (room.SdandartOccupancy > room.MaxOccupancy)
+            {
+                ModelState.AddModelError("MaxOccupancy", "Максимальна кількість гостів не може бути меншою за стандартну");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -142,6 +155,8 @@ namespace Lab1_web_app.Controllers
                 }
                 return RedirectToAction("Index", "Rooms", new { id = room.AccomodationId });
             }
+
+            ViewBag.AccomodationId = room.AccomodationId;
 
             ViewData["MealServiceId"] = new SelectList(_context.MealServices, "Id", "Id", room.MealServiceId);
 

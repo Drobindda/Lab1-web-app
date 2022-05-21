@@ -18,12 +18,16 @@ namespace Lab1_web_app
         [Display(Name = "Назва")]
         public string Name { get; set; } = null!;
         [Display(Name = "Стандартна кількість гостів")]
+        [Range(1, Int32.MaxValue)]
         public int SdandartOccupancy { get; set; }
         [Display(Name = "Максимальна кількість гостів")]
+        [Range(1, Int32.MaxValue)]
         public int MaxOccupancy { get; set; }
         [Display(Name = "Кількість спалень")]
+        [Range(1, Int32.MaxValue)]
         public int TotalBedrooms { get; set; }
         [Display(Name = "Кількість ванних кімант")]
+        [Range(1, Int32.MaxValue)]
         public int TotalBathrooms { get; set; }
         [Display(Name = "Телевізор")]
         public bool HasTv { get; set; }
@@ -38,10 +42,13 @@ namespace Lab1_web_app
         [Display(Name = "Опис")]
         public string? Description { get; set; }
         [Display(Name = "Розмір номеру")]
+        [Range(0, (double)Decimal.MaxValue)]
         public decimal Size { get; set; }
         [Display(Name = "Ціна за добу")]
+        [Range(0, (double)Decimal.MaxValue)]
         public decimal Price { get; set; }
         [Display(Name = "Кількість номерів")]
+        [Range(0, Int32.MaxValue)]
         public int Quantity { get; set; }
 
         public int StatusId { get; set; }

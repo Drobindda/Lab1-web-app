@@ -25,10 +25,13 @@ namespace Lab1_web_app
         [Display(Name = "Назва")]
         public string Name { get; set; } = null!;
         [Display(Name = "Зірки")]
+        [Range(0,5)]
         public byte? Stars { get; set; }
         [Display(Name = "Рейтинг")]
         public byte? Rating { get; set; }
         [Display(Name = "Телефон")]
+        [DataType(DataType.PhoneNumber)]
+        [Phone(ErrorMessage = "Неправильно введений номер телефону")]
         public string? Phone { get; set; }
         [Display(Name = "Створено")]
         public DateTime CreatedAt { get; set; }

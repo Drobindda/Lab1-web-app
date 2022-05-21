@@ -74,7 +74,7 @@ namespace Lab1_web_app.Controllers
         {
 
             accomodation.CreatedAt = DateTime.Now;
-            accomodation.UpdatedAt = DateTime.Now;
+            accomodation.UpdatedAt = accomodation.CreatedAt;
             accomodation.StatusId = _context.AccomodationStatuses.Where(s => s.Name == "OK").FirstOrDefault().Id;
 
 
@@ -89,9 +89,10 @@ namespace Lab1_web_app.Controllers
             ViewData["StatusId"] = new SelectList(_context.AccomodationStatuses, "Id", "Id", accomodation.StatusId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", accomodation.UserId);
 
-            return RedirectToAction("Index", "Accomodations", new { id = typeId, name = _context.AccomodationTypes.Where(a => a.Id == typeId).FirstOrDefault().Name });
+            ViewBag.AccomodationTypeId = typeId;
+            ViewBag.AccomodationTypeName = _context.AccomodationTypes.Where(a => a.Id == typeId).FirstOrDefault().Name;
 
-            //return View(accomodation);
+            return View(accomodation);
         }
 
         // GET: Accomodations/Edit/5
